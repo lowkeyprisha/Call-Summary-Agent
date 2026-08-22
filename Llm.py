@@ -38,4 +38,28 @@ Schema:
 TRANSCRIPT:
 {transcript}
 """
+
+
+STEP1_PROMPT = """You are an expert call analyst. Read the transcript below and extract:
+1. A concise 2-3 sentence summary of what the call was about
+2. All key topics discussed (list of short noun phrases)
+3. Overall sentiment: positive / neutral / negative, with one-sentence reasoning
+4. Every action item mentioned (task, who owns it, any deadline if stated)
+5. Each speaker's primary intent in this call
+ 
+Respond ONLY with valid JSON. No preamble, no markdown fences.
+ 
+Schema:
+{{
+  "summary": "string",
+  "key_topics": ["string"],
+  "sentiment": "positive|neutral|negative",
+  "sentiment_reasoning": "string",
+  "action_items": [{{"task": "string", "owner": "string or null", "deadline": "string or null"}}],
+  "speaker_intents": [{{"speaker": "string", "intent": "string"}}]
+}}
+ 
+TRANSCRIPT:
+{transcript}
+"""
  
