@@ -62,4 +62,28 @@ Schema:
 TRANSCRIPT:
 {transcript}
 """
+
+ def analyze_transcript(transcript: str) -> CallSummaryResponse:
+    """
+    Two-step agentic chain:
+      Step 1 — extract raw facts from transcript
+      Step 2 — validate, enrich, add follow_up + confidence_score
+    """
+    # Step 1
+    step1_response = model.generate_content(
+        STEP1_PROMPT.format(transcript=transcript)
+    )
+    step1_text = _clean_json(step1_response.text)
+    step1_data = json.loads(step1_text)
  
+    # Step 2
+    step2_response = model.generate_content(
+        STEP2_PROMPT.format(
+            transcript=transcript,
+            initial_analysis=json.dumps(step1_data, indent=2)
+        )
+    )
+    step2_text = _clean_json(step2_response.text)
+    step2_data = json.loads(step2_text)
+ 
+    return CallSummaryResponse(**step2_data)
