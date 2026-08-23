@@ -36,3 +36,19 @@ def test_root():
  
  
 @patch("src.routes.analyze_transcript", return_value=MOCK_RESPONSE)
+def test_analyze_success(mock_analyze):
+    response = client.post("/api/analyze", json={
+        "transcript": "Agent: Hello. Customer: I was charged twice. Agent: I'll refund you now."
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert "summary" in data
+    assert "sentiment" in data
+    assert "action_items" in data
+    assert "confidence_score" in data
+ 
+ 
+def test_analyze_short_transcript():
+    response = client.post("/api/analyze", json={"transcript": "Hi"})
+    assert response.status_code == 400
+ 
