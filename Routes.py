@@ -30,3 +30,5 @@ async def analyze(request: TranscriptRequest):
 )
 def health():
     return {"status": "ok"}
+
+# seems good
